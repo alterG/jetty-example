@@ -20,7 +20,6 @@ public class AllRequestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        super.doGet(request, response);
         Map<String, Object> variablesMap = createVariablesMap(request);
         variablesMap.put("message", "");
 
@@ -31,11 +30,21 @@ public class AllRequestServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Map<String, Object> variablesMap = createVariablesMap(request);
+        String message = request.getParameter("message");
+
+        if (message == null || message.isEmpty()) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        } else {
+            response.setStatus(HttpServletResponse.SC_OK);
+        }
+        variablesMap.put("message", message==null?"":message);
+
+        response.getWriter().println(PageGenerator.getInstance().getPage(HTML_TEMPLATE, variablesMap));
     }
 
-    private static Map<String,Object> createVariablesMap(HttpServletRequest request) {
+    private static Map<String, Object> createVariablesMap(HttpServletRequest request) {
         Map<String, Object> pageVariables = new HashMap<>();
         pageVariables.put("method", request.getMethod());
         pageVariables.put("url", request.getRequestURL().toString());
