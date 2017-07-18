@@ -1,4 +1,4 @@
-package addition.jdbc.exception;
+package addition.jdbc.service.exception;
 
 /**
  * Created by alterG on 18.07.2017.
