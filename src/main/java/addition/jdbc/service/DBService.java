@@ -1,7 +1,10 @@
 package addition.jdbc.service;
 
 import addition.jdbc.service.dao.UsersDAO;
+import addition.jdbc.service.dataset.UserDataSet;
+import addition.jdbc.service.exception.DBException;
 import org.h2.jdbcx.JdbcDataSource;
+import sun.awt.image.BadDepthException;
 
 import java.sql.Connection;
 import java.sql.Driver;
@@ -12,7 +15,7 @@ import java.sql.SQLException;
  * Created by alterG on 17.07.2017.
  */
 
-    @SuppressWarnings("UnusedDeclaration")
+@SuppressWarnings("UnusedDeclaration")
 public class DBService {
     private final Connection connection;
 
@@ -20,7 +23,36 @@ public class DBService {
         connection = getH2Connection();
     }
 
+    public UserDataSet getUser(long id) throws DBException {
+        try {
+            return new UsersDAO(connection).getUser(id);
+        } catch (SQLException e) {
+            throw new DBException(e);
+        }
+    }
 
+    public long addUser(String userName) throws DBException {
+        try {
+            connection.setAutoCommit(false);
+            UsersDAO usersDAO = new UsersDAO(connection);
+            usersDAO.createTable();
+            usersDAO.insertUser(userName);
+            connection.commit();
+            return usersDAO.getUserId(userName);
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException e1) {
+            }
+            throw new DBException(e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+            }
+        }
+
+    }
 
     public void cleanUp() {
         UsersDAO usersDAO = new UsersDAO(connection);
@@ -83,5 +115,6 @@ public class DBService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 }
