@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
+ * Object between DAO and Data base
  * Created by alterG on 18.07.2017.
  */
 public class Executor {
