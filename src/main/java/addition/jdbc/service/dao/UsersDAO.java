@@ -4,6 +4,7 @@ import addition.jdbc.service.dataset.UserDataSet;
 import addition.jdbc.service.executor.Executor;
 import addition.jdbc.service.executor.ResultSetHandler;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
@@ -12,8 +13,8 @@ import java.sql.SQLException;
 public class UsersDAO {
     private Executor executor;
 
-    public UsersDAO(Executor executor) {
-        this.executor = executor;
+    public UsersDAO(Connection connection) {
+        executor = new Executor(connection);
     }
 
     public UserDataSet getUser(long id) throws SQLException {
