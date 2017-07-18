@@ -18,6 +18,8 @@ public class Main {
 
             UserDataSet userDataSet = dbService.getUser(userId);
             System.out.println("New user is " + userDataSet);
+            dbService.cleanUp();
+
         } catch (DBException e) {
             e.printStackTrace();
         }
