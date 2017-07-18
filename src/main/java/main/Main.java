@@ -2,17 +2,15 @@ package main;
 
 import accounts.AccountService;
 import accounts.UserProfile;
-1
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import servlets.AllRequestServlet;
-import servlets.ServletTask1;
 import servlets.SessionsServlet;
-import servlets.UsersServlet;
+
+
 
 /**
  * Created by alterG on 14.07.2017.
@@ -24,12 +22,12 @@ public class Main {
         accountService.addNewUser(new UserProfile("test"));
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(new UsersServlet()), "api/users");
-        context.addServlet(new ServletHolder(new SessionsServlet()), "api/sessions");
+        context.addServlet(new ServletHolder(new SessionsServlet(accountService)), "/api/sessions");
 //        context.addServlet(new ServletHolder(new AllRequestServlet()), "/*");
 
         ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setResourceBase("public_html");
+        resourceHandler.setResourceBase("templates");
+        resourceHandler.setWelcomeFiles(new String[] {"index.html"});   // index.html - welcome page
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resourceHandler, context});
